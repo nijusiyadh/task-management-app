@@ -4,15 +4,24 @@
    "private": true,
    "scripts": {
       "validate": "tsx scripts/validate.ts",
-      "dev": "NODE_ENV=development yarn validate && next dev",
-      "build": "NODE_ENV=production yarn validate && next build",
+      "dev": "yarn validate && next dev",
+      "build": "yarn validate && next build",
       "start": "next start",
       "lint": "eslint",
       "format": "prettier --write .",
-      "prepare": "husky"
+      "prepare": "husky",
+      "postinstall": "prisma generate",
+      "prisma:deploy": "prisma migrate deploy",
+      "prisma:migrate": "prisma migrate dev",
+      "prisma:generate": "prisma generate",
+      "prisma:reset": "prisma migrate reset"
    },
    "dependencies": {
+      "@prisma/adapter-pg": "^7.8.0",
+      "@prisma/client": "^7.8.0",
+      "dotenv": "^17.4.2",
       "next": "16.2.4",
+      "pg": "^8.20.0",
       "react": "19.2.4",
       "react-dom": "19.2.4",
       "zod": "^4.4.3"
@@ -22,6 +31,7 @@
       "@commitlint/config-conventional": "^20.5.3",
       "@tailwindcss/postcss": "^4",
       "@types/node": "^20",
+      "@types/pg": "^8",
       "@types/react": "^19",
       "@types/react-dom": "^19",
       "eslint": "^9",
@@ -30,6 +40,7 @@
       "husky": "^9.1.7",
       "lint-staged": "^16.4.0",
       "prettier": "^3.8.3",
+      "prisma": "^7.8.0",
       "tailwindcss": "^4",
       "tsx": "^4.21.0",
       "typescript": "^5"

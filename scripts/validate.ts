@@ -1,7 +1,7 @@
 import z from 'zod';
 
 const envSchema = z.object({
-   NODE_ENV: z.enum(['development', 'production', 'test']),
+   POSTGRES_PRISMA_URL: z.url(),
 });
 
 (async () => {
