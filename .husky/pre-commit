@@ -1,1 +1,6 @@
+if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+  echo "Cannot commit on main branch"
+  exit 1
+fi
+
 npx lint-staged
