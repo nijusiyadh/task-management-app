@@ -13,28 +13,46 @@ interface AuthCardProps {
    title?: string;
    description?: string;
    className?: string;
+   logo?: ReactNode;
+   footer?: ReactNode;
 }
 
-function AuthCard({ children, title, description, className }: AuthCardProps) {
+function AuthCard({
+   children,
+   title,
+   description,
+   className,
+   logo,
+   footer,
+}: AuthCardProps) {
    return (
       <Card
          size="default"
-         className={cn('w-full max-w-lg font-urbanist', className)}>
-         {(title || description) && (
-            <CardHeader className="w-full items-center text-center">
+         className={cn(
+            'w-full max-w-md font-urbanist shadow-xl shadow-foreground/5 ring-foreground/8',
+            className
+         )}>
+         {(logo || title || description) && (
+            <CardHeader className="w-full items-center gap-3 text-center pb-2">
+               {logo && <div className="flex justify-center">{logo}</div>}
                {title && (
-                  <CardTitle className="font-semibold font-urbanist text-2xl!">
+                  <CardTitle className="font-bold font-urbanist text-2xl! tracking-tight">
                      {title}
                   </CardTitle>
                )}
                {description && (
-                  <CardDescription className="text-center text-base!">
+                  <CardDescription className="text-center text-sm! text-muted-foreground leading-relaxed">
                      {description}
                   </CardDescription>
                )}
             </CardHeader>
          )}
-         <CardContent>{children}</CardContent>
+         <CardContent className="pt-2">{children}</CardContent>
+         {footer && (
+            <div className="px-4 pb-5 text-center text-sm text-muted-foreground">
+               {footer}
+            </div>
+         )}
       </Card>
    );
 }
