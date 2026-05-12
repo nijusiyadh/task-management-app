@@ -1,19 +1,30 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Mail, User } from 'lucide-react';
+import Link from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { registerSchema, type RegisterSchema } from '@/features/auth/schemas';
-
 import { FieldError } from '@/components/shared';
+
+import { PasswordInput } from './password-input';
+import { ROUTES } from '@/constants/routes';
+import { registerSchema, type RegisterSchema } from '@/features/auth/schemas';
 
 import { AuthCard } from './auth-card';
 
+const inputIconClass =
+   'absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none';
+
 function RegisterForm() {
-   const { control, handleSubmit } = useForm<RegisterSchema>({
+   const {
+      control,
+      handleSubmit,
+      formState: { isSubmitting },
+   } = useForm<RegisterSchema>({
       resolver: zodResolver(registerSchema),
    });
 
@@ -24,21 +35,35 @@ function RegisterForm() {
    return (
       <AuthCard
          title="Create an account"
-         description="Enter your details below to create your account and get started.">
-         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+         description="Enter your details below to create your account and get started."
+         footer={
+            <p>
+               Already have an account?{' '}
+               <Link
+                  href={ROUTES.login.path}
+                  className="font-medium text-foreground underline-offset-4 hover:underline">
+                  Sign in
+               </Link>
+            </p>
+         }>
+         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Controller
                control={control}
-               name="email"
+               name="fullName"
                render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
-                     <Label htmlFor="email">Email Address</Label>
-                     <Input
-                        {...field}
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        aria-invalid={!!fieldState.error}
-                     />
+                     <Label htmlFor="fullName">Full Name</Label>
+                     <div className="relative">
+                        <User className={inputIconClass} />
+                        <Input
+                           {...field}
+                           id="fullName"
+                           type="text"
+                           placeholder="John Doe"
+                           className="pl-9"
+                           aria-invalid={!!fieldState.error}
+                        />
+                     </div>
                      <FieldError message={fieldState.error?.message} />
                   </div>
                )}
@@ -46,17 +71,21 @@ function RegisterForm() {
 
             <Controller
                control={control}
-               name="fullName"
+               name="email"
                render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
-                     <Label htmlFor="fullName">Full Name</Label>
-                     <Input
-                        {...field}
-                        id="fullName"
-                        type="text"
-                        placeholder="John Doe"
-                        aria-invalid={!!fieldState.error}
-                     />
+                     <Label htmlFor="email">Email Address</Label>
+                     <div className="relative">
+                        <Mail className={inputIconClass} />
+                        <Input
+                           {...field}
+                           id="email"
+                           type="email"
+                           placeholder="you@example.com"
+                           className="pl-9"
+                           aria-invalid={!!fieldState.error}
+                        />
+                     </div>
                      <FieldError message={fieldState.error?.message} />
                   </div>
                )}
@@ -68,10 +97,9 @@ function RegisterForm() {
                render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
                      <Label htmlFor="password">Password</Label>
-                     <Input
+                     <PasswordInput
                         {...field}
                         id="password"
-                        type="password"
                         placeholder="Min. 6 characters"
                         aria-invalid={!!fieldState.error}
                      />
@@ -86,10 +114,9 @@ function RegisterForm() {
                render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
                      <Label htmlFor="confirmPassword">Confirm Password</Label>
-                     <Input
+                     <PasswordInput
                         {...field}
                         id="confirmPassword"
-                        type="password"
                         placeholder="Re-enter your password"
                         aria-invalid={!!fieldState.error}
                      />
@@ -101,7 +128,8 @@ function RegisterForm() {
             <Button
                size="lg"
                type="submit"
-               className="w-full hover:cursor-pointer">
+               loading={isSubmitting}
+               className="mt-2 w-full hover:cursor-pointer">
                Create account
             </Button>
          </form>
